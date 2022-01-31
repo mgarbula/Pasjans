@@ -1,0 +1,33 @@
+
+buttons.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+button_close_down1
+  rotate: false
+  xy: 0, 180
+  size: 400, 180
+  orig: 400, 180
+  offset: 0, 0
+  index: -1
+button_close_up1
+  rotate: false
+  xy: 0, 0
+  size: 400, 180
+  orig: 400, 180
+  offset: 0, 0
+  index: -1
+button_play_down1
+  rotate: false
+  xy: 400, 210
+  size: 250, 150
+  orig: 250, 150
+  offset: 0, 0
+  index: -1
+button_play_up1
+  rotate: false
+  xy: 400, 60
+  size: 250, 150
+  orig: 250, 150
+  offset: 0, 0
+  index: -1
