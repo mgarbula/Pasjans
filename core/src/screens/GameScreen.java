@@ -38,7 +38,6 @@ public class GameScreen implements Screen {
     private ArrayList<Texture> goodStacksTextures; // karty dobrych stacków
     private ArrayList<Rectangle> deckRectangle; // zakryte karty
     private ArrayList<Rectangle> emptyStacks;
-    private int howManyDeals;
     private int whichStack, whichCard; // do poruszania kartami
     private int howManyCardsToMove; // zmienna przechowująca ilość przenoszonych kart
     private boolean wasClicked, moveOne, moveMultiple; // zmienne do przesuwania, żeby się nie przesuwały inne karty
@@ -64,8 +63,6 @@ public class GameScreen implements Screen {
 
         cardOnTable = Gdx.audio.newSound(Gdx.files.internal("card_on_table_2.mp3"));
         cardBack = new Texture(Gdx.files.internal("rewers.png"));
-        //howManyCards = 0;
-        howManyDeals = 5;
     }
 
     @Override
@@ -347,8 +344,8 @@ public class GameScreen implements Screen {
                     }
 
                     // obsługa dorzucania kart z nieodkrytego stosu
-                    if (howManyDeals > 0) {
-                        if (screenX >= deckRectangle.get(howManyDeals - 1).getX() && screenX <= deckRectangle.get(howManyDeals - 1).getX() + deckRectangle.get(0).getWidth()
+                    if (deckRectangle.size() > 0) {
+                        if (screenX >= deckRectangle.get(deckRectangle.size() - 1).getX() && screenX <= deckRectangle.get(deckRectangle.size() - 1).getX() + deckRectangle.get(0).getWidth()
                                 && screenY <= camera.viewportHeight - deckRectangle.get(0).getY() && screenY >= camera.viewportHeight - deckRectangle.get(0).getY() - deckRectangle.get(0).getHeight()) {
                             boolean dontGiveCards = false; // nie mogę dawać kart, jeśli są puste pola
                             for (int i = 0; i < stacks.size(); i++)
@@ -360,8 +357,7 @@ public class GameScreen implements Screen {
                                 for (int i = 0; i < 10; i++) {
                                     addCards(i);
                                 }
-                                howManyDeals--;
-                                deckRectangle.remove(howManyDeals);
+                                deckRectangle.remove(deckRectangle.size() - 1);
                             }
                             return true;
                         }
@@ -372,6 +368,9 @@ public class GameScreen implements Screen {
 
                 return false;
             }
+
+            // warunki w touchDown
+
 
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
@@ -714,8 +713,8 @@ public class GameScreen implements Screen {
 
     // metoda wyświetlająca nieodkrytą talię
     public void displayDeck() {
-        if (howManyDeals <= 5) {
-            for (int i = 0; i < howManyDeals; i++)
+        if (deckRectangle.size() <= 5) {
+            for (int i = 0; i < deckRectangle.size(); i++)
                 batch.draw(cardBack, deckRectangle.get(i).x, deckRectangle.get(i).y);
         }
     }
