@@ -389,12 +389,12 @@ public class GameScreen implements Screen {
                                 break;
 
                             // przeniesienie na pusty stos
-                            if (stacks.get(whichStack).get(whichCard).getRectangle().overlaps(emptyStacks.get(toStack)) && stacks.get(toStack).size() == 0) {
+                            if (overlapsEmpty(whichCard, whichStack, toStack) && !sizeBiggerThanZero(toStack)) {
                                 move(toStack);
                                 //isAbleToRoll(toStack);
                                 breakLoop = true;
                                 break;
-                            } else if (stacks.get(toStack).size() > 0 && stacks.get(whichStack).get(whichCard).getRectangle().overlaps(stacks.get(toStack).get(stacks.get(toStack).size() - 1).getRectangle()) && stacks.get(toStack).get(stacks.get(toStack).size() - 1).isKnown() && stacks.get(whichStack).get(whichCard).getValue() - stacks.get(toStack).get(stacks.get(toStack).size() - 1).getValue() == -1) {
+                            } else if (sizeBiggerThanZero(toStack) && overlapsNotEmpty(whichCard, whichStack, toStack) && cardKnown(toStack) && goodValue(whichCard, whichStack, toStack)) {
                                 // przenieś kartę na nowy stos
                                 move(toStack);
                                 isAbleToRoll(toStack);
@@ -416,6 +416,43 @@ public class GameScreen implements Screen {
                     return true;
                 }
                 return false;
+            }
+
+            // warunki w if'ach do touchUp()
+
+            public boolean sizeBiggerThanZero(int toStack){
+                if(stacks.get(toStack).size() == 0)
+                    return false;
+                else
+                    return true;
+            }
+
+            public boolean overlapsEmpty(int whichCard, int whichStack, int toStack){
+                if(stacks.get(whichStack).get(whichCard).getRectangle().overlaps(emptyStacks.get(toStack)))
+                    return true;
+                else
+                    return false;
+            }
+
+            public boolean overlapsNotEmpty(int whichCard, int whichStack, int toStack){
+                if(stacks.get(whichStack).get(whichCard).getRectangle().overlaps(stacks.get(toStack).get(stacks.get(toStack).size() - 1).getRectangle()))
+                    return true;
+                else
+                    return false;
+            }
+
+            public boolean cardKnown(int toStack){
+                if(stacks.get(toStack).get(stacks.get(toStack).size() - 1).isKnown())
+                    return true;
+                else
+                    return false;
+            }
+
+            public boolean goodValue(int whichCard, int whichStack, int toStack){
+                if(stacks.get(whichStack).get(whichCard).getValue() - stacks.get(toStack).get(stacks.get(toStack).size() - 1).getValue() == -1)
+                    return true;
+                else
+                    return false;
             }
 
             // obsługa przesuwania kart
