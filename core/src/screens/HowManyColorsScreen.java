@@ -20,9 +20,6 @@ public class HowManyColorsScreen implements Screen {
 
     final Pasjans game;
 
-    private final int SCREEN_WIDTH = 1920;
-    private final int SCREEN_HEIGHT = 1080;
-
     OrthographicCamera camera;
     Stage stage;
     Label.LabelStyle style;
@@ -35,7 +32,7 @@ public class HowManyColorsScreen implements Screen {
         this.game = game;
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
+        camera.setToOrtho(false, game.SCREEN_WIDTH, game.SCREEN_HEIGHT);
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
@@ -92,8 +89,8 @@ public class HowManyColorsScreen implements Screen {
         style.font = game.titleFont;
 
         title = new Label("Pasjans", style);
-        title.setX(SCREEN_WIDTH/2 - title.getWidth()/2);
-        title.setY(SCREEN_HEIGHT/2 + 200);
+        title.setX(game.SCREEN_WIDTH/2 - title.getWidth()/2);
+        title.setY(game.SCREEN_HEIGHT/2 + 200);
         stage.addActor(title);
     }
 
@@ -101,7 +98,7 @@ public class HowManyColorsScreen implements Screen {
         style.font = new BitmapFont(Gdx.files.internal("fonts/menu_font.fnt"));
 
         info = new Label("Z ilu kolorow chcesz ukladac Pasjansa?", style);
-        info.setX(SCREEN_WIDTH/2 - info.getWidth()/2);
+        info.setX(game.SCREEN_WIDTH/2 - info.getWidth()/2);
         info.setY(title.getY() - info.getHeight() - 50);
         stage.addActor(info);
     }
@@ -118,19 +115,19 @@ public class HowManyColorsScreen implements Screen {
         style.font = new BitmapFont(Gdx.files.internal("fonts/checkbox_font.fnt"));
 
         oneColor = new CheckBox("   Jeden kolor", style);
-        oneColor.setX(SCREEN_WIDTH/2 - oneColor.getWidth()/2);
+        oneColor.setX(game.SCREEN_WIDTH/2 - oneColor.getWidth()/2);
         oneColor.setY(info.getY() - oneColor.getHeight() - 30);
         stage.addActor(oneColor);
         checkBoxes.add(oneColor);
 
         twoColors = new CheckBox("   Dwa kolory", style);
-        twoColors.setX(SCREEN_WIDTH/2 - twoColors.getWidth()/2);
+        twoColors.setX(game.SCREEN_WIDTH/2 - twoColors.getWidth()/2);
         twoColors.setY(oneColor.getY() - twoColors.getHeight() - 30);
         stage.addActor(twoColors);
         checkBoxes.add(twoColors);
 
         fourColors = new CheckBox("Cztery kolory", style);
-        fourColors.setX(SCREEN_WIDTH/2 - fourColors.getWidth()/2);
+        fourColors.setX(game.SCREEN_WIDTH/2 - fourColors.getWidth()/2);
         fourColors.setY(twoColors.getY() - fourColors.getHeight() - 30);
         stage.addActor(fourColors);
         checkBoxes.add(fourColors);
@@ -148,7 +145,7 @@ public class HowManyColorsScreen implements Screen {
         textButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/menu_font.fnt"));
 
         playButton = new TextButton("Graj", textButtonStyle);
-        playButton.setX(SCREEN_WIDTH/2 - playButton.getWidth()/2);
+        playButton.setX(game.SCREEN_WIDTH/2 - playButton.getWidth()/2);
         playButton.setY(fourColors.getY() - playButton.getHeight() - 30);
         stage.addActor(playButton);
     }
@@ -157,7 +154,7 @@ public class HowManyColorsScreen implements Screen {
         style.font = new BitmapFont(Gdx.files.internal("fonts/checkbox_font.fnt"));
 
         warning = new Label("Musisz zaznaczyc jedno pole!", style);
-        warning.setX(SCREEN_WIDTH/2 - warning.getWidth()/2);
+        warning.setX(game.SCREEN_WIDTH/2 - warning.getWidth()/2);
         warning.setY(playButton.getY() - warning.getHeight() - 50);
     }
 
