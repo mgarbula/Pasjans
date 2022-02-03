@@ -9,6 +9,8 @@ import screens.MainMenuScreen;
 
 public class Pasjans extends Game {
 
+	public final int SCREEN_HEIGHT = 1080;
+	public final int SCREEN_WIDTH = 1920;
 	public SpriteBatch spriteBatch;
 	public BitmapFont titleFont;
 

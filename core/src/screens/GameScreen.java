@@ -20,8 +20,6 @@ public class GameScreen implements Screen {
     final Pasjans game;
 
     private final int SIZE_OF_DECK = 104;
-    private final int SCREEN_HEIGHT = 1080;
-    private final int SCREEN_WIDTH = 1920;
     private final int CARD_HEIGHT = 230;
     private final int CARD_WIDTH = 160;
     private final int SPACE_BETWEEN_CARDS = 35;
@@ -52,7 +50,7 @@ public class GameScreen implements Screen {
 
         // ustawienie kamery (zawsze pokazuje obszar 1920x1080)
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
+        camera.setToOrtho(false, game.SCREEN_WIDTH, game.SCREEN_HEIGHT);
 
         batch = new SpriteBatch();
 
@@ -314,7 +312,7 @@ public class GameScreen implements Screen {
                     // czy myszka kliknięta (potrzebne do przesuwania, żeby nie brało innych kart na które najeżdżam)
                     for (int i = 0; i < stacks.size(); i++) {
                         for (int j = stacks.get(i).size() - 1; j >= 0; j--) {
-                            if (stacks.get(i).get(j).getRectangle().contains(screenX, SCREEN_HEIGHT - screenY) && stacks.get(i).get(j).isKnown()) {
+                            if (stacks.get(i).get(j).getRectangle().contains(screenX, game.SCREEN_HEIGHT - screenY) && stacks.get(i).get(j).isKnown()) {
                                 if (j == stacks.get(i).size() - 1) {
                                     // przesuwanie jednej karty
                                     wasClicked = true;
@@ -471,7 +469,7 @@ public class GameScreen implements Screen {
 
                     // poruszanie kartą
                     if (moveOne) {
-                        stacks.get(whichStack).get(whichCard).getRectangle().setCenter(setScreenX(screenX), SCREEN_HEIGHT - setScreenY(screenY));
+                        stacks.get(whichStack).get(whichCard).getRectangle().setCenter(setScreenX(screenX), game.SCREEN_HEIGHT - setScreenY(screenY));
                         return true;
                     }
 
@@ -483,7 +481,7 @@ public class GameScreen implements Screen {
                     if (moveMultiple) {
                         int card = 0; // która karta zmienia współrzędne
                         for (int i = whichCard; i < stacks.get(whichStack).size(); i++) {
-                            stacks.get(whichStack).get(i).getRectangle().setCenter(setScreenX(screenX), SCREEN_HEIGHT - setScreenY(screenY) - CARD_HEIGHT / 2 + 20 - card * SPACE_BETWEEN_CARDS); // 230/2 - połowa wys karty, 20 - odległosc od górnej krawędzi karty
+                            stacks.get(whichStack).get(i).getRectangle().setCenter(setScreenX(screenX), game.SCREEN_HEIGHT - setScreenY(screenY) - CARD_HEIGHT / 2 + 20 - card * SPACE_BETWEEN_CARDS); // 230/2 - połowa wys karty, 20 - odległosc od górnej krawędzi karty
                             card++;
                         }
                         return true;
@@ -666,8 +664,8 @@ public class GameScreen implements Screen {
     public int setScreenX(int screenX) {
         if (screenX < CARD_WIDTH / 2) // połowa szerokości karty
             return CARD_WIDTH / 2;
-        else if (screenX > SCREEN_WIDTH - CARD_WIDTH / 2)
-            return SCREEN_WIDTH - CARD_WIDTH / 2;
+        else if (screenX > game.SCREEN_WIDTH - CARD_WIDTH / 2)
+            return game.SCREEN_WIDTH - CARD_WIDTH / 2;
         else
             return screenX;
     }
@@ -676,8 +674,8 @@ public class GameScreen implements Screen {
         if (moveOne) {
             if (screenY < CARD_HEIGHT / 2 && screenY >= 0)
                 screenY = CARD_HEIGHT / 2;
-            else if (screenY > SCREEN_HEIGHT - CARD_HEIGHT / 2 && screenY <= SCREEN_HEIGHT)
-                screenY = SCREEN_HEIGHT - CARD_HEIGHT / 2;
+            else if (screenY > game.SCREEN_HEIGHT - CARD_HEIGHT / 2 && screenY <= game.SCREEN_HEIGHT)
+                screenY = game.SCREEN_HEIGHT - CARD_HEIGHT / 2;
         } else if (moveMultiple) {
             for (int i = 0; i < howManyCardsToMove; i++) {
                 if (screenY < 20 && screenY >= 0)
