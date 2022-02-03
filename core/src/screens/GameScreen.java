@@ -44,6 +44,7 @@ public class GameScreen implements Screen {
     boolean oneCard, multipleCards, breakLoop; // zmienne do przesuwania jednej i wielu kart
     private Texture cardBack;
     private int howManyColors;
+    private int howManyMoves;
 
     public GameScreen(final Pasjans game, int howManyColors) {
         this.game = game;
@@ -516,11 +517,13 @@ public class GameScreen implements Screen {
         if (moveOne) {// jedna karta
             moveOneCard(i, whichStack, whichCard);
             moveOne = false;
+            howManyMoves++;
         }
         if (moveMultiple) {
             // kilka kart
             moveMultipleCards(i, whichStack, whichCard);
             moveMultiple = false;
+            howManyMoves++;
         }
     }
 
