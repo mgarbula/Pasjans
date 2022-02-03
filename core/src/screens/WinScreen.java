@@ -53,6 +53,7 @@ public class WinScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(0, 0.2f, 0, 1);
         camera.update();
+        game.spriteBatch.setProjectionMatrix(camera.combined);
 
         stage.draw();
 
@@ -60,6 +61,7 @@ public class WinScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new HowManyColorsScreen(game));
+                dispose();
             }
         });
 
@@ -67,6 +69,7 @@ public class WinScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuScreen(game));
+                dispose();
             }
         });
 
