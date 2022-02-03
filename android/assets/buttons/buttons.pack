@@ -6,15 +6,15 @@ repeat: none
 button_close_down1
   rotate: false
   xy: 0, 180
-  size: 400, 180
-  orig: 400, 180
+  size: 400, 150
+  orig: 400, 150
   offset: 0, 0
   index: -1
 button_close_up1
   rotate: false
   xy: 0, 0
-  size: 400, 180
-  orig: 400, 180
+  size: 400, 150
+  orig: 400, 150
   offset: 0, 0
   index: -1
 button_play_down1

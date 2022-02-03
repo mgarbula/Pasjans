@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.mygdx.pasjans.Pasjans;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class GameScreen implements Screen {
     private Texture cardBack;
     private int howManyColors;
     private int howManyMoves;
+    private long startTime; // czas gry
 
     public GameScreen(final Pasjans game, int howManyColors) {
         this.game = game;
@@ -62,6 +64,7 @@ public class GameScreen implements Screen {
 
         cardOnTable = Gdx.audio.newSound(Gdx.files.internal("card_on_table_2.mp3"));
         cardBack = new Texture(Gdx.files.internal("rewers.png"));
+        startTime = TimeUtils.millis();
     }
 
     @Override
@@ -701,7 +704,7 @@ public class GameScreen implements Screen {
             for (int i = 0; i < goodStacks.size(); i++)
                 batch.draw(goodStacksTextures.get(i), goodStacks.get(i).getX(), goodStacks.get(i).getY());
             if (goodStacks.size() == 8)
-                System.out.println("WYGRALES!");
+                game.setScreen(new WinScreen(game, howManyMoves, TimeUtils.timeSinceMillis(startTime)));
         }
     }
 
