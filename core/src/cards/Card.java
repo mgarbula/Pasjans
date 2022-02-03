@@ -13,7 +13,6 @@ public class Card {
     private Texture back;
     private boolean isKnown;
     private Rectangle rectangle;
-    /*private int xLeftDown, yLeftDown, xRightUp, yRightUp;*/
 
     public Card(int value, String name, String color, Texture image){
         this.value = value;
