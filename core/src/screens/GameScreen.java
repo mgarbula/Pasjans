@@ -345,8 +345,7 @@ public class GameScreen implements Screen {
 
                     // obsługa dorzucania kart z nieodkrytego stosu
                     if (deckRectangle.size() > 0) {
-                        if (screenX >= deckRectangle.get(deckRectangle.size() - 1).getX() && screenX <= deckRectangle.get(deckRectangle.size() - 1).getX() + deckRectangle.get(0).getWidth()
-                                && screenY <= camera.viewportHeight - deckRectangle.get(0).getY() && screenY >= camera.viewportHeight - deckRectangle.get(0).getY() - deckRectangle.get(0).getHeight()) {
+                        if (clickOnDeck(screenX, screenY)) {
                             boolean dontGiveCards = false; // nie mogę dawać kart, jeśli są puste pola
                             for (int i = 0; i < stacks.size(); i++)
                                 if (stacks.get(i).size() == 0) {
@@ -370,6 +369,13 @@ public class GameScreen implements Screen {
             }
 
             // warunki w touchDown
+            public boolean clickOnDeck(int screenX, int screenY){
+                if(screenX >= deckRectangle.get(deckRectangle.size() - 1).getX() && screenX <= deckRectangle.get(deckRectangle.size() - 1).getX() + deckRectangle.get(0).getWidth()
+                        && screenY <= camera.viewportHeight - deckRectangle.get(0).getY() && screenY >= camera.viewportHeight - deckRectangle.get(0).getY() - deckRectangle.get(0).getHeight())
+                    return true;
+                else
+                    return false;
+            }
 
 
             @Override
