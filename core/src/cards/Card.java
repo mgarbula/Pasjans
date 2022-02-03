@@ -35,40 +35,16 @@ public class Card {
         return value;
     }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getColor() {
         return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
     }
 
     public Texture getImage() {
         return image;
     }
 
-    public void setImage(Texture image) {
-        this.image = image;
-    }
-
     public Texture getBack() {
         return back;
-    }
-
-    public void setBack(Texture back) {
-        this.back = back;
     }
 
     public boolean isKnown() {
@@ -83,12 +59,4 @@ public class Card {
         return rectangle;
     }
 
-    public void setRectangle(Rectangle rectangle) {
-        this.rectangle = rectangle;
-    }
-
-    public float getxLeftDown() { return rectangle.x; }
-    public float getyLeftDown() { return rectangle.y; }
-    public float getxRightUp() { return rectangle.x + rectangle.getWidth(); }
-    public float getyRightUp() { return rectangle.y + rectangle.getHeight(); }
 }
