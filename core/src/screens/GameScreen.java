@@ -374,7 +374,7 @@ public class GameScreen implements Screen {
                         && screenY <= camera.viewportHeight - deckRectangle.get(0).getY() && screenY >= camera.viewportHeight - deckRectangle.get(0).getY() - deckRectangle.get(0).getHeight())
                     return true;
                 else
-                    return false;
+                    return  false;
             }
 
 
@@ -396,7 +396,6 @@ public class GameScreen implements Screen {
                             // przeniesienie na pusty stos
                             if (overlapsEmpty(whichCard, whichStack, toStack) && !sizeBiggerThanZero(toStack)) {
                                 move(toStack);
-                                //isAbleToRoll(toStack);
                                 breakLoop = true;
                                 break;
                             } else if (sizeBiggerThanZero(toStack) && overlapsNotEmpty(whichCard, whichStack, toStack) && cardKnown(toStack) && goodValue(whichCard, whichStack, toStack)) {
@@ -465,19 +464,21 @@ public class GameScreen implements Screen {
             public boolean touchDragged(int screenX, int screenY, int pointer) {
                 if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 
-                    // poruszanie jedną kartą
+                    // poruszanie jedną kartą (ustawienie zmiennych boolean'owych, żeby przesuwanie było na zbocze narastające)
                     if (wasClicked && oneCard)
                         moveOne();
 
+                    // poruszanie kartą
                     if (moveOne) {
                         stacks.get(whichStack).get(whichCard).getRectangle().setCenter(setScreenX(screenX), SCREEN_HEIGHT - setScreenY(screenY));
                         return true;
                     }
 
-                    // poruszanie wieloma kartami
+                    // poruszanie wieloma kartami (ustawienie zmiennych boolean'owych, żeby przesuwanie było na zbocze narastające)
                     if (wasClicked && multipleCards)
                         moveMultiple();
 
+                    // poruszanie kartami
                     if (moveMultiple) {
                         int card = 0; // która karta zmienia współrzędne
                         for (int i = whichCard; i < stacks.get(whichStack).size(); i++) {
@@ -523,6 +524,49 @@ public class GameScreen implements Screen {
         }
     }
 
+    // metoda przenosząca kartę na inny stos
+    public void moveOneCard(int toStack, int fromStack, int whichCard) {
+        // przenoszenie na pusty stos
+        if (stacks.get(toStack).size() == 0) {
+            stacks.get(fromStack).get(whichCard).getRectangle().setX(emptyStacks.get(toStack).getX());
+            stacks.get(fromStack).get(whichCard).getRectangle().setY(emptyStacks.get(toStack).getY());
+        } else {
+            stacks.get(fromStack).get(whichCard).getRectangle().setX(stacks.get(toStack).get(stacks.get(toStack).size() - 1).getRectangle().getX());
+            stacks.get(fromStack).get(whichCard).getRectangle().setY(stacks.get(toStack).get(stacks.get(toStack).size() - 1).getRectangle().getY() - SPACE_BETWEEN_CARDS);
+        }
+        // dodaję kartę na nowy stos
+        stacks.get(toStack).add(stacks.get(fromStack).get(whichCard));
+        //cardOnTable.play();
+        // usuwam kartą stąd, skąd ją brałem
+        stacks.get(fromStack).remove(whichCard);
+        // poznaję nową kartę
+        if (stacks.get(fromStack).size() > 0)
+            stacks.get(fromStack).get(stacks.get(fromStack).size() - 1).setKnown(true);
+    }
+
+    // poruszanie wieloma kartami
+    public void moveMultipleCards(int toStack, int fromStack, int whichCard) {
+        for (int j = 1; j <= howManyCardsToMove; j++) {
+            // przenoszenie na pusty stos
+            if (stacks.get(toStack).size() == 0) {
+                stacks.get(fromStack).get(whichCard).getRectangle().setX(emptyStacks.get(toStack).getX());
+                stacks.get(fromStack).get(whichCard).getRectangle().setY(emptyStacks.get(toStack).getY());
+            } else {
+                stacks.get(fromStack).get(whichCard).getRectangle().setX(stacks.get(toStack).get(stacks.get(toStack).size() - 1).getRectangle().getX());
+                stacks.get(fromStack).get(whichCard).getRectangle().setY(stacks.get(toStack).get(stacks.get(toStack).size() - 1).getRectangle().getY() - SPACE_BETWEEN_CARDS);
+
+            }
+            // dodaję kartę na nowy stos
+            stacks.get(toStack).add(stacks.get(fromStack).get(whichCard));
+            cardOnTable.play();
+            // usuwam kartę stąd, skąd brałem
+            stacks.get(fromStack).remove(whichCard);
+            // poznaję nową kartę
+            if (stacks.get(whichStack).size() > 0)
+                stacks.get(fromStack).get(stacks.get(fromStack).size() - 1).setKnown(true);
+        }
+    }
+
     public void isAbleToRoll(int stack) {
         if (stacks.get(stack).size() >= HOW_MANY_CARDS_TO_ROLL_STACK) {
             int king = 0;
@@ -562,64 +606,12 @@ public class GameScreen implements Screen {
         multipleCards = false;
     }
 
-    // metoda przenosząca kartę na inny stos
-    public void moveOneCard(int toStack, int fromStack, int whichCard) {
-        // przenoszenie na pusty stos
-        if (stacks.get(toStack).size() == 0) {
-            int whichEmptyStack = 0;
-            while (whichEmptyStack != toStack)
-                whichEmptyStack++;
-            stacks.get(fromStack).get(whichCard).getRectangle().setX(emptyStacks.get(whichEmptyStack).getX());
-            stacks.get(fromStack).get(whichCard).getRectangle().setY(emptyStacks.get(whichEmptyStack).getY());
-        } else {
-            stacks.get(fromStack).get(whichCard).getRectangle().setX(stacks.get(toStack).get(stacks.get(toStack).size() - 1).getRectangle().getX());
-            stacks.get(fromStack).get(whichCard).getRectangle().setY(stacks.get(toStack).get(stacks.get(toStack).size() - 1).getRectangle().getY() - SPACE_BETWEEN_CARDS);
-        }
-        // dodaję kartę na nowy stos
-        stacks.get(toStack).add(stacks.get(fromStack).get(whichCard));
-        //cardOnTable.play();
-        // usuwam kartą stąd, skąd ją brałem
-        stacks.get(fromStack).remove(whichCard);
-        // poznaję nową kartę
-        if (stacks.get(fromStack).size() > 0)
-            stacks.get(fromStack).get(stacks.get(fromStack).size() - 1).setKnown(true);
-    }
-
-    // poruszanie wieloma kartami
-    public void moveMultipleCards(int toStack, int fromStack, int whichCard) {
-        for (int j = 1; j <= howManyCardsToMove; j++) {
-            // przenoszenie na pusty stos
-            if (stacks.get(toStack).size() == 0) {
-                int whichEmptyStack = 0;
-                while (whichEmptyStack != toStack)
-                    whichEmptyStack++;
-                stacks.get(fromStack).get(whichCard).getRectangle().setX(emptyStacks.get(whichEmptyStack).getX());
-                stacks.get(fromStack).get(whichCard).getRectangle().setY(emptyStacks.get(whichEmptyStack).getY());
-            } else {
-                stacks.get(fromStack).get(whichCard).getRectangle().setX(stacks.get(toStack).get(stacks.get(toStack).size() - 1).getRectangle().getX());
-                stacks.get(fromStack).get(whichCard).getRectangle().setY(stacks.get(toStack).get(stacks.get(toStack).size() - 1).getRectangle().getY() - SPACE_BETWEEN_CARDS);
-
-            }
-            // dodaję kartę na nowy stos
-            stacks.get(toStack).add(stacks.get(fromStack).get(whichCard));
-            //cardOnTable.play();
-            // usuwam kartę stąd, skąd brałem
-            stacks.get(fromStack).remove(whichCard);
-            // poznaję nową kartę
-            if (stacks.get(whichStack).size() > 0)
-                stacks.get(fromStack).get(stacks.get(fromStack).size() - 1).setKnown(true);
-        }
-    }
-
     // jedna karta wraca na swój stos
     public void oneCardBackOnStack(int fromStack, int whichCard) {
         // powrót na pusty stos
         if (stacks.get(fromStack).size() == 1) {
-            int whichStackOfSizeOne = 0;
-            while (whichStackOfSizeOne != fromStack)
-                whichStackOfSizeOne++;
-            stacks.get(fromStack).get(whichCard).getRectangle().setX(emptyStacks.get(whichStackOfSizeOne).getX());
-            stacks.get(fromStack).get(whichCard).getRectangle().setY(emptyStacks.get(whichStackOfSizeOne).getY());
+            stacks.get(fromStack).get(whichCard).getRectangle().setX(emptyStacks.get(fromStack).getX());
+            stacks.get(fromStack).get(whichCard).getRectangle().setY(emptyStacks.get(fromStack).getY());
         } else {
             stacks.get(fromStack).get(whichCard).getRectangle().setX(stacks.get(fromStack).get(whichCard - 1).getRectangle().getX());
             stacks.get(fromStack).get(whichCard).getRectangle().setY(stacks.get(fromStack).get(whichCard - 1).getRectangle().getY() - SPACE_BETWEEN_CARDS);
@@ -708,7 +700,7 @@ public class GameScreen implements Screen {
             for (int i = 0; i < goodStacks.size(); i++)
                 batch.draw(goodStacksTextures.get(i), goodStacks.get(i).getX(), goodStacks.get(i).getY());
             if (goodStacks.size() == 8)
-                System.out.println("WYGRALES CHUJU!!!");
+                System.out.println("WYGRALES!");
         }
     }
 
