@@ -659,10 +659,9 @@ public class GameScreen implements Screen {
         rectangle.setX(65 + SPACE_BETWEEN_CARDS * goodStacks.size());
         goodStacks.add(rectangle);
         // usunięcie kart ze stołu
-        for (int i = 1; i <= HOW_MANY_CARDS_TO_ROLL_STACK; i++) {
-            stacks.get(stack).get(i).getImage().dispose();
+        for (int i = 1; i <= HOW_MANY_CARDS_TO_ROLL_STACK; i++)
             stacks.get(stack).remove(firstCard);
-        }
+
         // odsłonięcie ostatniej karty ze stosu który zrobiłem
         if (stacks.get(stack).size() > 0)
             stacks.get(stack).get(stacks.get(stack).size() - 1).setKnown(true);
