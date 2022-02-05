@@ -113,6 +113,9 @@ public class GameScreen implements Screen {
         for (int i = 0; i < deck.size(); i++)
             deck.get(i).getImage().dispose();
 
+        for(int i = 0; i <  goodStacksTextures.size(); i++)
+            goodStacksTextures.get(i).dispose();
+
         for (int i = 0; i < stacks.size(); i++)
             for (int j = 0; j < stacks.get(i).size(); j++)
                 stacks.get(i).get(j).getImage().dispose();
@@ -540,7 +543,7 @@ public class GameScreen implements Screen {
         }
         // dodaję kartę na nowy stos
         stacks.get(toStack).add(stacks.get(fromStack).get(whichCard));
-        //cardOnTable.play();
+        cardOnTable.play();
         // usuwam kartą stąd, skąd ją brałem
         stacks.get(fromStack).remove(whichCard);
         // poznaję nową kartę
@@ -656,8 +659,10 @@ public class GameScreen implements Screen {
         rectangle.setX(65 + SPACE_BETWEEN_CARDS * goodStacks.size());
         goodStacks.add(rectangle);
         // usunięcie kart ze stołu
-        for (int i = 1; i <= HOW_MANY_CARDS_TO_ROLL_STACK; i++)
+        for (int i = 1; i <= HOW_MANY_CARDS_TO_ROLL_STACK; i++) {
+            stacks.get(stack).get(i).getImage().dispose();
             stacks.get(stack).remove(firstCard);
+        }
         // odsłonięcie ostatniej karty ze stosu który zrobiłem
         if (stacks.get(stack).size() > 0)
             stacks.get(stack).get(stacks.get(stack).size() - 1).setKnown(true);
@@ -703,8 +708,10 @@ public class GameScreen implements Screen {
         if (goodStacks != null) {
             for (int i = 0; i < goodStacks.size(); i++)
                 batch.draw(goodStacksTextures.get(i), goodStacks.get(i).getX(), goodStacks.get(i).getY());
-            if (goodStacks.size() == 8)
+            if (goodStacks.size() == 8) {
                 game.setScreen(new WinScreen(game, howManyMoves, TimeUtils.timeSinceMillis(startTime)));
+                dispose();
+            }
         }
     }
 
