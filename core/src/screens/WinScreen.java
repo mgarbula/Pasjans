@@ -1,5 +1,8 @@
 package screens;
 
+import buttons.CloseButton;
+import buttons.MenuButton;
+import buttons.PlayButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -24,7 +27,9 @@ public class WinScreen implements Screen {
     Label title, movesInfo, timeInfo;
     Label.LabelStyle style;
     Stage stage;
-    TextButton playAgain, menu, close;
+    PlayButton playButton;
+    MenuButton menuButton;
+    CloseButton closeButton;
 
     public WinScreen(final Pasjans game, int howManyMoves, long time){
         this.game = game;
@@ -57,7 +62,7 @@ public class WinScreen implements Screen {
 
         stage.draw();
 
-        playAgain.addListener(new ClickListener(){
+        playButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new HowManyColorsScreen(game));
@@ -65,7 +70,7 @@ public class WinScreen implements Screen {
             }
         });
 
-        menu.addListener(new ClickListener(){
+        menuButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuScreen(game));
@@ -73,7 +78,7 @@ public class WinScreen implements Screen {
             }
         });
 
-        close.addListener(new ClickListener(){
+        closeButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.dispose();
@@ -104,68 +109,38 @@ public class WinScreen implements Screen {
         int minutes = (int) (time/60000);
         time -= minutes * 60000;
         int seconds = (int) (time/1000);
-        if(minutes > 10 && seconds > 10)
+        //if(minutes > 10 && seconds > 10)
             timeInfo = new Label("Czas gry: " + minutes + ":" + seconds, style);
-        else if(minutes < 10 && seconds < 10)
+       /* else if(minutes < 10 && seconds < 10)
             timeInfo = new Label("Czas gry: 0" + minutes + ":0" + seconds, style);
         else if(minutes < 10)
             timeInfo = new Label("Czas gry: 0" + minutes + ":" + seconds, style);
         else if(seconds < 10)
-            timeInfo = new Label("Czas gry: " + minutes + ":0" + seconds, style);
+            timeInfo = new Label("Czas gry: " + minutes + ":0" + seconds, style);*/
         timeInfo.setX(game.SCREEN_WIDTH/2 - timeInfo.getWidth()/2);
         timeInfo.setY(movesInfo.getY() - timeInfo.getHeight() - 30);
         stage.addActor(timeInfo);
     }
 
     public void createPlayAgainButton(){
-        TextureAtlas buttonAtlas = new TextureAtlas("buttons/buttons.pack");
-        Skin skin = new Skin(buttonAtlas);
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-
-        textButtonStyle.up = skin.getDrawable("button_play_up1");
-        textButtonStyle.down = skin.getDrawable("button_play_down1");
-        textButtonStyle.pressedOffsetX = 1;
-        textButtonStyle.pressedOffsetY = -1;
-        textButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/menu_font.fnt"));
-
-        playAgain = new TextButton("Graj", textButtonStyle);
-        playAgain.setX(game.SCREEN_WIDTH/2 - playAgain.getWidth()/2);
-        playAgain.setY(timeInfo.getY() - playAgain.getHeight() - 30);
-        stage.addActor(playAgain);
+       playButton = new PlayButton();
+        playButton.getButton().setX(game.SCREEN_WIDTH/2 - playButton.getButton().getWidth()/2);
+        playButton.getButton().setY(timeInfo.getY() - playButton.getButton().getHeight() - 30);
+        stage.addActor(playButton.getButton());
     }
 
     public void createMenuButton(){
-        TextureAtlas buttonAtlas = new TextureAtlas("win_menu_button/win_menu_button.pack");
-        Skin skin = new Skin(buttonAtlas);
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-
-        textButtonStyle.up = skin.getDrawable("up");
-        textButtonStyle.down = skin.getDrawable("down");
-        textButtonStyle.pressedOffsetX = 1;
-        textButtonStyle.pressedOffsetY = -1;
-        textButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/menu_font.fnt"));
-
-        menu = new TextButton("Menu", textButtonStyle);
-        menu.setX(game.SCREEN_WIDTH/2 - menu.getWidth()/2);
-        menu.setY(playAgain.getY() - menu.getHeight() - 30);
-        stage.addActor(menu);
+        menuButton = new MenuButton();
+        menuButton.getButton().setX(game.SCREEN_WIDTH/2 - menuButton.getButton().getWidth()/2);
+        menuButton.getButton().setY(playButton.getButton().getY() - menuButton.getButton().getHeight() - 30);
+        stage.addActor(menuButton.getButton());
     }
 
     public void createCloseButton(){
-        TextureAtlas buttonAtlas = new TextureAtlas("buttons/buttons.pack");
-        Skin skin = new Skin(buttonAtlas);
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-
-        textButtonStyle.up = skin.getDrawable("button_close_up1");
-        textButtonStyle.down = skin.getDrawable("button_close_down1");
-        textButtonStyle.pressedOffsetX = 1;
-        textButtonStyle.pressedOffsetY = -1;
-        textButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/menu_font.fnt"));
-
-        close = new TextButton("Zamknij", textButtonStyle);
-        close.setX(game.SCREEN_WIDTH/2 - close.getWidth()/2);
-        close.setY(menu.getY() - close.getHeight() - 30);
-        stage.addActor(close);
+        closeButton = new CloseButton();
+        closeButton.getButton().setX(game.SCREEN_WIDTH/2 - closeButton.getButton().getWidth()/2);
+        closeButton.getButton().setY(menuButton.getButton().getY() - closeButton.getButton().getHeight() - 30);
+        stage.addActor(closeButton.getButton());
     }
 
     @Override

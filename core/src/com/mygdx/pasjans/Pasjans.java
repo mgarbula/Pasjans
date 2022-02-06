@@ -28,7 +28,7 @@ public class Pasjans extends Game {
 	}
 
 	public void dispose(){
-		spriteBatch.dispose();
-		titleFont.dispose();
+		this.spriteBatch.dispose();
+		this.titleFont.dispose();
 	}
 }

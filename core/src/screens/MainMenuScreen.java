@@ -1,5 +1,7 @@
 package screens;
 
+import buttons.CloseButton;
+import buttons.PlayButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -12,9 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.mygdx.pasjans.Pasjans;
 
 import javax.swing.*;
+import java.sql.Time;
 
 public class MainMenuScreen implements Screen {
 
@@ -25,9 +29,10 @@ public class MainMenuScreen implements Screen {
 
     OrthographicCamera camera;
     Stage stage;
-    TextButton playButton, closeButton;
     Label title;
     Label.LabelStyle style;
+    PlayButton playButton;
+    CloseButton closeButton;
 
     public MainMenuScreen(final Pasjans game){
         this.game = game;
@@ -59,14 +64,16 @@ public class MainMenuScreen implements Screen {
 
         stage.draw();
 
-        playButton.addListener(new ClickListener(){
+        playButton.getButton().addListener(new ClickListener(){
+            @Override
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new HowManyColorsScreen(game));
+                //game.setScreen(new WinScreen(game, 293, 1352));
                 dispose();
             }
         });
 
-        closeButton.addListener(new ClickListener(){
+        closeButton.getButton().addListener(new ClickListener(){
            public void clicked(InputEvent event, float x, float y){
                game.dispose();
            }
@@ -80,42 +87,22 @@ public class MainMenuScreen implements Screen {
 
         title = new Label("Pasjans", style);
         title.setX(SCREEN_WIDTH/2 - title.getWidth()/2);
-        title.setY(SCREEN_HEIGHT/2 + 200);
+        title.setY(SCREEN_HEIGHT/2 + 300);
         stage.addActor(title);
     }
 
     public void createPlayButton(){
-        TextureAtlas buttonAtlas = new TextureAtlas("buttons/buttons.pack");
-        Skin skin = new Skin(buttonAtlas);
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-
-        textButtonStyle.up = skin.getDrawable("button_play_up1");
-        textButtonStyle.down = skin.getDrawable("button_play_down1");
-        textButtonStyle.pressedOffsetX = 1;
-        textButtonStyle.pressedOffsetY = -1;
-        textButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/menu_font.fnt"));
-
-        playButton = new TextButton("Graj", textButtonStyle);
-        playButton.setX(SCREEN_WIDTH/2 - playButton.getWidth()/2);
-        playButton.setY(title.getY() - playButton.getHeight() - 50);
-        stage.addActor(playButton);
+        playButton = new PlayButton();
+        playButton.getButton().setX(SCREEN_WIDTH/2 - playButton.getButton().getWidth()/2);
+        playButton.getButton().setY(title.getY() - playButton.getButton().getHeight() - 150);
+        stage.addActor(playButton.getButton());
     }
 
     public void createCloseButton(){
-        TextureAtlas atlas = new TextureAtlas("buttons/buttons.pack");
-        Skin skin = new Skin(atlas);
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-
-        textButtonStyle.up = skin.getDrawable("button_close_up1");
-        textButtonStyle.down = skin.getDrawable("button_close_down1");
-        textButtonStyle.pressedOffsetX = 1;
-        textButtonStyle.pressedOffsetY = -1;
-        textButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/menu_font.fnt"));
-
-        closeButton = new TextButton("Zamknij", textButtonStyle);
-        closeButton.setX(SCREEN_WIDTH/2 - closeButton.getWidth()/2);
-        closeButton.setY(playButton.getY() - closeButton.getHeight() - 50);
-        stage.addActor(closeButton);
+        closeButton = new CloseButton();
+        closeButton.getButton().setX(SCREEN_WIDTH/2 - closeButton.getButton().getWidth()/2);
+        closeButton.getButton().setY(playButton.getButton().getY() - closeButton.getButton().getHeight() - 50);
+        stage.addActor(closeButton.getButton());
     }
 
     @Override

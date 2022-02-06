@@ -1,5 +1,7 @@
 package screens;
 
+import buttons.MenuButton;
+import buttons.PlayButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -26,7 +28,8 @@ public class HowManyColorsScreen implements Screen {
     Label title, info, warning;
     CheckBox oneColor, twoColors, fourColors;
     Array<CheckBox> checkBoxes;
-    TextButton playButton;
+    PlayButton playButton;
+    MenuButton menuButton;
 
     public HowManyColorsScreen(Pasjans game) {
         this.game = game;
@@ -43,7 +46,9 @@ public class HowManyColorsScreen implements Screen {
         // checkboxy do wyboru ilości kolorów
         createCheckBoxes();
         // przycisk graj
-        placeOfPlayButton();
+        playButton();
+        // przycisk menu
+        menuButton();
         // stworzenie ostrzeżenia przed ilością zaznaczonych checkboxów
         warning();
     }
@@ -62,7 +67,7 @@ public class HowManyColorsScreen implements Screen {
 
         stage.draw();
 
-        playButton.addListener(new ClickListener(){
+        playButton.getButton().addListener(new ClickListener(){
             @Override
            public void clicked(InputEvent event, float x, float y){
                 int howManyChecked = 0;
@@ -82,6 +87,14 @@ public class HowManyColorsScreen implements Screen {
                 }
            }
         });
+
+        menuButton.getButton().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new MainMenuScreen(game));
+                dispose();
+            }
+        });
     }
 
     public void createTitle(){
@@ -90,7 +103,7 @@ public class HowManyColorsScreen implements Screen {
 
         title = new Label("Pasjans", style);
         title.setX(game.SCREEN_WIDTH/2 - title.getWidth()/2);
-        title.setY(game.SCREEN_HEIGHT/2 + 200);
+        title.setY(game.SCREEN_HEIGHT/2 + 300);
         stage.addActor(title);
     }
 
@@ -99,7 +112,7 @@ public class HowManyColorsScreen implements Screen {
 
         info = new Label("Z ilu kolorow chcesz ukladac Pasjansa?", style);
         info.setX(game.SCREEN_WIDTH/2 - info.getWidth()/2);
-        info.setY(title.getY() - info.getHeight() - 50);
+        info.setY(title.getY() - info.getHeight());
         stage.addActor(info);
     }
 
@@ -133,21 +146,18 @@ public class HowManyColorsScreen implements Screen {
         checkBoxes.add(fourColors);
     }
 
-    public void placeOfPlayButton(){
-        TextureAtlas buttonAtlas = new TextureAtlas("buttons/buttons.pack");
-        Skin skin = new Skin(buttonAtlas);
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+    public void playButton(){
+        playButton = new PlayButton();
+        playButton.getButton().setX(game.SCREEN_WIDTH/2 - playButton.getButton().getWidth()/2);
+        playButton.getButton().setY(fourColors.getY() - playButton.getButton().getHeight() - 30);
+        stage.addActor(playButton.getButton());
+    }
 
-        textButtonStyle.up = skin.getDrawable("button_play_up1");
-        textButtonStyle.down = skin.getDrawable("button_play_down1");
-        textButtonStyle.pressedOffsetX = 1;
-        textButtonStyle.pressedOffsetY = -1;
-        textButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/menu_font.fnt"));
-
-        playButton = new TextButton("Graj", textButtonStyle);
-        playButton.setX(game.SCREEN_WIDTH/2 - playButton.getWidth()/2);
-        playButton.setY(fourColors.getY() - playButton.getHeight() - 30);
-        stage.addActor(playButton);
+    public void menuButton(){
+        menuButton = new MenuButton();
+        menuButton.getButton().setX(game.SCREEN_WIDTH/2 - menuButton.getButton().getWidth()/2);
+        menuButton.getButton().setY(playButton.getButton().getY() - menuButton.getButton().getHeight() - 30);
+        stage.addActor(menuButton.getButton());
     }
 
     public void warning(){
@@ -155,7 +165,7 @@ public class HowManyColorsScreen implements Screen {
 
         warning = new Label("Musisz zaznaczyc jedno pole!", style);
         warning.setX(game.SCREEN_WIDTH/2 - warning.getWidth()/2);
-        warning.setY(playButton.getY() - warning.getHeight() - 50);
+        warning.setY(20);
     }
 
     @Override
