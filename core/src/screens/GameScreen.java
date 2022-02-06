@@ -77,15 +77,19 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(0, 0.4f, 0, 1);
         camera.update();
 
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
+        game.spriteBatch.setProjectionMatrix(camera.combined);
+        game.spriteBatch.begin();
         displayDeck();
         displayGoodStacks();
         displayCards();
         //displayEmptyStacks();
         inputProcesses();
         drawMovingCard();
-        batch.end();
+        game.spriteBatch.end();
+        if (goodStacks != null && goodStacks.size() == 8) {
+            game.setScreen(new WinScreen(game, howManyMoves, TimeUtils.timeSinceMillis(startTime)));
+            dispose();
+        }
     }
 
     @Override
@@ -119,7 +123,7 @@ public class GameScreen implements Screen {
         for (int i = 0; i < stacks.size(); i++)
             for (int j = 0; j < stacks.get(i).size(); j++)
                 stacks.get(i).get(j).getImage().dispose();
-        batch.dispose();
+        //game.spriteBatch.dispose();
     }
 
     public void makePlaceForHiddenCards() {
@@ -287,9 +291,9 @@ public class GameScreen implements Screen {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < stacks.get(i).size(); j++) {
                 if (stacks.get(i).get(j).isKnown())
-                    batch.draw(stacks.get(i).get(j).getImage(), stacks.get(i).get(j).getRectangle().x, stacks.get(i).get(j).getRectangle().y);
+                    game.spriteBatch.draw(stacks.get(i).get(j).getImage(), stacks.get(i).get(j).getRectangle().x, stacks.get(i).get(j).getRectangle().y);
                 else
-                    batch.draw(stacks.get(i).get(j).getBack(), stacks.get(i).get(j).getRectangle().x, stacks.get(i).get(j).getRectangle().y);
+                    game.spriteBatch.draw(stacks.get(i).get(j).getBack(), stacks.get(i).get(j).getRectangle().x, stacks.get(i).get(j).getRectangle().y);
             }
         }
     }
@@ -660,7 +664,7 @@ public class GameScreen implements Screen {
         goodStacks.add(rectangle);
         // usunięcie kart ze stołu
         for (int i = 1; i <= HOW_MANY_CARDS_TO_ROLL_STACK; i++) {
-            stacks.get(stack).get(i - 1).getImage().dispose();
+            stacks.get(stack).get(firstCard).getImage().dispose();
             stacks.get(stack).remove(firstCard);
         }
         // odsłonięcie ostatniej karty ze stosu który zrobiłem
@@ -696,10 +700,10 @@ public class GameScreen implements Screen {
     // metoda rysująca przesuwającą się kartę
     public void drawMovingCard() {
         if (moveOne)
-            batch.draw(stacks.get(whichStack).get(whichCard).getImage(), stacks.get(whichStack).get(whichCard).getRectangle().x, stacks.get(whichStack).get(whichCard).getRectangle().y);
+            game.spriteBatch.draw(stacks.get(whichStack).get(whichCard).getImage(), stacks.get(whichStack).get(whichCard).getRectangle().x, stacks.get(whichStack).get(whichCard).getRectangle().y);
         else if (moveMultiple)
             for (int i = 0; i < howManyCardsToMove; i++)
-                batch.draw(stacks.get(whichStack).get(whichCard + i).getImage(), stacks.get(whichStack).get(whichCard + i).getRectangle().x, stacks.get(whichStack).get(whichCard + i).getRectangle().y);
+                game.spriteBatch.draw(stacks.get(whichStack).get(whichCard + i).getImage(), stacks.get(whichStack).get(whichCard + i).getRectangle().x, stacks.get(whichStack).get(whichCard + i).getRectangle().y);
 
     }
 
@@ -707,11 +711,7 @@ public class GameScreen implements Screen {
     public void displayGoodStacks() {
         if (goodStacks != null) {
             for (int i = 0; i < goodStacks.size(); i++)
-                batch.draw(goodStacksTextures.get(i), goodStacks.get(i).getX(), goodStacks.get(i).getY());
-            if (goodStacks.size() == 8) {
-                game.setScreen(new WinScreen(game, howManyMoves, TimeUtils.timeSinceMillis(startTime)));
-                dispose();
-            }
+                game.spriteBatch.draw(goodStacksTextures.get(i), goodStacks.get(i).getX(), goodStacks.get(i).getY());
         }
     }
 
@@ -724,7 +724,7 @@ public class GameScreen implements Screen {
     public void displayDeck() {
         if (deckRectangle.size() <= 5) {
             for (int i = 0; i < deckRectangle.size(); i++)
-                batch.draw(cardBack, deckRectangle.get(i).x, deckRectangle.get(i).y);
+                game.spriteBatch.draw(cardBack, deckRectangle.get(i).x, deckRectangle.get(i).y);
         }
     }
 

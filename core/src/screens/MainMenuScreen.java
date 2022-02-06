@@ -68,7 +68,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new HowManyColorsScreen(game));
-                //game.setScreen(new WinScreen(game, 293, 1352));
+                //game.setScreen(new WinScreen(game, 293, 1352000));
                 dispose();
             }
         });
