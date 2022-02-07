@@ -42,6 +42,10 @@ public class Card {
         return image;
     }
 
+    public void setImage(String name){
+        image = new Texture(Gdx.files.internal(name));
+    }
+
     public Texture getBack() {
         return back;
     }

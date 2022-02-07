@@ -19,6 +19,8 @@ import java.util.Collections;
 
 public class GameScreen implements Screen {
     final Pasjans game;
+    private int howManyColors;
+    private boolean wasPaused;
 
     private final int SIZE_OF_DECK = 104;
     private final int CARD_HEIGHT = 230;
@@ -42,13 +44,13 @@ public class GameScreen implements Screen {
     private boolean wasClicked, moveOne, moveMultiple; // zmienne do przesuwania, żeby się nie przesuwały inne karty
     boolean oneCard, multipleCards, breakLoop; // zmienne do przesuwania jednej i wielu kart
     private Texture cardBack;
-    private int howManyColors;
     private int howManyMoves;
     private long startTime; // czas gry
 
-    public GameScreen(final Pasjans game, int howManyColors) {
+    public GameScreen(final Pasjans game, int howManyColors, boolean wasPaused) {
         this.game = game;
         this.howManyColors = howManyColors;
+        this.wasPaused = wasPaused;
 
         // ustawienie kamery (zawsze pokazuje obszar 1920x1080)
         camera = new OrthographicCamera();
@@ -56,15 +58,57 @@ public class GameScreen implements Screen {
 
         batch = new SpriteBatch();
 
-        makeDeck();
-        makeStacks();
-        makePlaceForStacks();
-        makePlaceForHiddenCards();
-        makePlaceForEmptyStacks();
+        if(!wasPaused) {
+            makeDeck();
+            makeStacks();
+            makePlaceForStacks();
+            makePlaceForHiddenCards();
+            makePlaceForEmptyStacks();
+        }
 
         cardOnTable = Gdx.audio.newSound(Gdx.files.internal("card_on_table_2.mp3"));
         cardBack = new Texture(Gdx.files.internal("rewers.png"));
         startTime = TimeUtils.millis();
+    }
+
+    public GameScreen(final Pasjans game, boolean wasPaused, ArrayList<Card> deck, ArrayList<ArrayList<Card>> stacks, ArrayList<Rectangle> goodStacks,
+                        ArrayList<Texture> goodStacksTextures, ArrayList<Rectangle> deckRectangle, ArrayList<Rectangle> emptyStacks){
+        this.game = game;
+        this.wasPaused = wasPaused;
+        this.deck = deck;
+        this.stacks = stacks;
+        if(goodStacks != null)
+            this.goodStacks = goodStacks;
+        if(goodStacksTextures != null){
+            this.goodStacksTextures = goodStacksTextures;
+            /*for(int i = 0; i < goodStacksTextures.size(); i++){
+                String name = goodStacksTextures.get(i).toString();
+                this.goodStacksTextures.add(new Texture(Gdx.files.internal(name)));
+            }
+            for(int i = 0; i < goodStacksTextures.size()/2; i++)
+                this.goodStacksTextures.remove(i);*/
+        }
+        if(deckRectangle != null)
+            this.deckRectangle = deckRectangle;
+        this.emptyStacks = emptyStacks;
+
+        for(int i = 0; i < stacks.size(); i++){
+            for(int j = 0; j < stacks.get(i).size(); j++) {
+                this.stacks.get(i).get(j).setImage(stacks.get(i).get(j).getImage().toString());
+            }
+        }
+
+        for (int i = 0; i < deck.size(); i++)
+            deck.get(i).setImage(deck.get(i).getImage().toString());
+
+        // ustawienie kamery (zawsze pokazuje obszar 1920x1080)
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, game.SCREEN_WIDTH, game.SCREEN_HEIGHT);
+
+        batch = new SpriteBatch();
+
+        cardOnTable = Gdx.audio.newSound(Gdx.files.internal("card_on_table_2.mp3"));
+        cardBack = new Texture(Gdx.files.internal("rewers.png"));
     }
 
     @Override
@@ -117,12 +161,16 @@ public class GameScreen implements Screen {
         for (int i = 0; i < deck.size(); i++)
             deck.get(i).getImage().dispose();
 
-        for(int i = 0; i <  goodStacksTextures.size(); i++)
-            goodStacksTextures.get(i).dispose();
+        if(goodStacksTextures != null) {
+            for (int i = 0; i < goodStacksTextures.size(); i++)
+                goodStacksTextures.get(i).dispose();
+        }
 
         for (int i = 0; i < stacks.size(); i++)
             for (int j = 0; j < stacks.get(i).size(); j++)
                 stacks.get(i).get(j).getImage().dispose();
+
+        cardBack.dispose();
         //game.spriteBatch.dispose();
     }
 
@@ -307,6 +355,12 @@ public class GameScreen implements Screen {
 
             @Override
             public boolean keyUp(int keycode) {
+                if(keycode == Input.Keys.ESCAPE) {
+                    //System.out.println("Wcisnieto Escape");
+                    pause();
+                    game.setScreen(new PauseScreen(game, deck, stacks, goodStacks, goodStacksTextures, deckRectangle, emptyStacks));
+                    dispose();
+                }
                 return false;
             }
 

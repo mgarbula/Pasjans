@@ -80,7 +80,7 @@ public class HowManyColorsScreen implements Screen {
                 }
 
                 if(howManyChecked == 1){
-                    game.setScreen(new GameScreen(game, whichChecked));
+                    game.setScreen(new GameScreen(game, whichChecked, false));
                     dispose();
                 } else if(howManyChecked > 1 || howManyChecked == 0){
                     stage.addActor(warning);
