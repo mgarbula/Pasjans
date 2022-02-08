@@ -1,0 +1,2 @@
+# Pasjans
+Gra pasjans-pająk
