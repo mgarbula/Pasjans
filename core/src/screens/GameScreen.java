@@ -28,7 +28,6 @@ public class GameScreen implements Screen {
     private final int SPACE_BETWEEN_CARDS = 35;
     private final int HOW_MANY_CARDS_TO_ROLL_STACK = 13;
     private final OrthographicCamera camera;
-    private final SpriteBatch batch;
     private final Sound cardOnTable;
     private final String[] names = {"ace", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
             "jack", "queen", "king"}; // names of cards
@@ -47,6 +46,7 @@ public class GameScreen implements Screen {
     private int howManyMoves;
     private long startTime; // czas gry
 
+    // konstruktor używany przy pierwszym włączeniu gry
     public GameScreen(final Pasjans game, int howManyColors, boolean wasPaused) {
         this.game = game;
         this.howManyColors = howManyColors;
@@ -56,7 +56,6 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, game.SCREEN_WIDTH, game.SCREEN_HEIGHT);
 
-        batch = new SpriteBatch();
 
         if(!wasPaused) {
             makeDeck();
@@ -69,46 +68,6 @@ public class GameScreen implements Screen {
         cardOnTable = Gdx.audio.newSound(Gdx.files.internal("card_on_table_2.mp3"));
         cardBack = new Texture(Gdx.files.internal("rewers.png"));
         startTime = TimeUtils.millis();
-    }
-
-    public GameScreen(final Pasjans game, boolean wasPaused, ArrayList<Card> deck, ArrayList<ArrayList<Card>> stacks, ArrayList<Rectangle> goodStacks,
-                        ArrayList<Texture> goodStacksTextures, ArrayList<Rectangle> deckRectangle, ArrayList<Rectangle> emptyStacks){
-        this.game = game;
-        this.wasPaused = wasPaused;
-        this.deck = deck;
-        this.stacks = stacks;
-        if(goodStacks != null)
-            this.goodStacks = goodStacks;
-        if(goodStacksTextures != null){
-            this.goodStacksTextures = goodStacksTextures;
-            /*for(int i = 0; i < goodStacksTextures.size(); i++){
-                String name = goodStacksTextures.get(i).toString();
-                this.goodStacksTextures.add(new Texture(Gdx.files.internal(name)));
-            }
-            for(int i = 0; i < goodStacksTextures.size()/2; i++)
-                this.goodStacksTextures.remove(i);*/
-        }
-        if(deckRectangle != null)
-            this.deckRectangle = deckRectangle;
-        this.emptyStacks = emptyStacks;
-
-        for(int i = 0; i < stacks.size(); i++){
-            for(int j = 0; j < stacks.get(i).size(); j++) {
-                this.stacks.get(i).get(j).setImage(stacks.get(i).get(j).getImage().toString());
-            }
-        }
-
-        for (int i = 0; i < deck.size(); i++)
-            deck.get(i).setImage(deck.get(i).getImage().toString());
-
-        // ustawienie kamery (zawsze pokazuje obszar 1920x1080)
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, game.SCREEN_WIDTH, game.SCREEN_HEIGHT);
-
-        batch = new SpriteBatch();
-
-        cardOnTable = Gdx.audio.newSound(Gdx.files.internal("card_on_table_2.mp3"));
-        cardBack = new Texture(Gdx.files.internal("rewers.png"));
     }
 
     @Override
@@ -143,7 +102,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-
     }
 
     @Override
@@ -171,6 +129,7 @@ public class GameScreen implements Screen {
                 stacks.get(i).get(j).getImage().dispose();
 
         cardBack.dispose();
+        cardOnTable.dispose();
         //game.spriteBatch.dispose();
     }
 
@@ -356,10 +315,9 @@ public class GameScreen implements Screen {
             @Override
             public boolean keyUp(int keycode) {
                 if(keycode == Input.Keys.ESCAPE) {
-                    //System.out.println("Wcisnieto Escape");
-                    pause();
-                    game.setScreen(new PauseScreen(game, deck, stacks, goodStacks, goodStacksTextures, deckRectangle, emptyStacks));
+                    game.setScreen(new MainMenuScreen(game));
                     dispose();
+                    return true;
                 }
                 return false;
             }
