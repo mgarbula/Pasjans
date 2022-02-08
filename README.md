@@ -1,2 +1,2 @@
 # Pasjans
-Gra pasjans-pająk
+Gra pasjans-pająk stworzona przy użyciu silnika graficznego libGDX
